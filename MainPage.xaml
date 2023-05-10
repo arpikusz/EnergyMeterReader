@@ -13,7 +13,6 @@
             HorizontalOptions="Fill">
 
             <Button MinimumHeightRequest="300" MinimumWidthRequest="300" Text="LEOLVASÁS!" Clicked="Button_Clicked" />
- 
         </VerticalStackLayout>
     </ScrollView>
 

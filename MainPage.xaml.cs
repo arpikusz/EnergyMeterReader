@@ -1,5 +1,4 @@
-﻿using Camera.MAUI;
-using Reader.Azure;
+﻿using Reader.Azure;
 
 
 namespace Reader;
@@ -18,7 +17,6 @@ public partial class MainPage : ContentPage
             FileResult photo = await MediaPicker.Default.CapturePhotoAsync();
             if (photo != null)
             {
-                //string localFilePath = Path.Combine(FileSystem.CacheDirectory, photo.FileName);
                 string localFilePath = Path.Combine(FileSystem.AppDataDirectory, photo.FileName);
 
                 using (Stream sourceStream = await photo.OpenReadAsync())
@@ -34,11 +32,13 @@ public partial class MainPage : ContentPage
                 if (ocrResult.IsValid)
                 {
                     // send message
-                    DisplayAlert("Siker", $"Drága: {ocrResult.HighCounter}; Olcsó: {ocrResult.LowCounter}", "OK");
+                    var smsBody = ocrResult.ToString();
+                    await Clipboard.Default.SetTextAsync(smsBody);
+                    await DisplayAlert("Siker", smsBody, "Üzenet másolása");
                 }
                 else
                 {
-                    DisplayAlert("Rossz kép", "Nem sikerült leolvasni a számokat.", "OK");
+                    await DisplayAlert("Rossz kép", "Nem sikerült leolvasni a számokat.", "OK");
                 }
             }
         }

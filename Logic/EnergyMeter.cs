@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Reader.Logic;
 
@@ -8,6 +9,26 @@ public class EnergyMeter
     public string LowCounter { get; private set; }
 
     public bool IsValid { get => HighCounter != null && LowCounter != null; }
+
+    public override string ToString()
+    {
+        string nev = "Lajos!";
+
+        var sb = new StringBuilder();
+
+        if (IsValid)
+        {
+            return $"Tisztelt {nev}!"  
+                + Environment.NewLine
+                + $"{DateTime.Now.ToString("yyyy-MM-dd")} dátumon a villanyóra állás a következő: "
+                + Environment.NewLine
+                + $"Drága: {HighCounter}; Olcsó: {LowCounter};"
+                + Environment.NewLine
+                + $"Ház: Szabó Árpád, Vocarska 15A";
+        }
+
+        return sb.ToString();
+    }
 
     public bool AddReading(string raw)
     {
