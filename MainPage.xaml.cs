@@ -1,34 +1,49 @@
-﻿namespace Reader;
+﻿using Camera.MAUI;
+using Reader.Azure;
+
+
+namespace Reader;
 
 public partial class MainPage : ContentPage
 {
-	public MainPage()
-	{
-		InitializeComponent();
-	}
-
-    private void cameraView_CamerasLoaded(object sender, EventArgs e)
+    public MainPage()
     {
-        cameraView.Camera = cameraView.Cameras.First();
-
-        MainThread.BeginInvokeOnMainThread(async () =>
-        {
-            await cameraView.StopCameraAsync();
-            await cameraView.StartCameraAsync();
-        });
+        InitializeComponent();
     }
 
-    private void Button_Clicked(object sender, EventArgs e)
+    private async void Button_Clicked(object sender, EventArgs e)
     {
-        myImage.Source = cameraView.GetSnapShot(Camera.MAUI.ImageFormat.PNG);
+        if (MediaPicker.Default.IsCaptureSupported)
+        {
+            FileResult photo = await MediaPicker.Default.CapturePhotoAsync();
+            if (photo != null)
+            {
+                //string localFilePath = Path.Combine(FileSystem.CacheDirectory, photo.FileName);
+                string localFilePath = Path.Combine(FileSystem.AppDataDirectory, photo.FileName);
 
-        // save 
-        //cameraView.SaveSnapShot(Camera.MAUI.ImageFormat.PNG, "");
-        // process
-        // if valid
-        // send message
-        // else 
-        // throw error
+                using (Stream sourceStream = await photo.OpenReadAsync())
+                {
+                    using FileStream localFileStream = File.OpenWrite(localFilePath);
+                    sourceStream.CopyToAsync(localFileStream).Wait();
+                }
+
+
+                var azureVision = new ComputerVisionHandler();
+                var ocrResult = azureVision.CallOcr(localFilePath);
+
+                if (ocrResult.IsValid)
+                {
+                    // send message
+                    DisplayAlert("Siker", $"Drága: {ocrResult.HighCounter}; Olcsó: {ocrResult.LowCounter}", "OK");
+                }
+                else
+                {
+                    DisplayAlert("Rossz kép", "Nem sikerült leolvasni a számokat.", "OK");
+                }
+            }
+        }
+
+
     }
 }
 

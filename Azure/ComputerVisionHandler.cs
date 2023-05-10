@@ -9,14 +9,14 @@ namespace Reader.Azure
         // Add your Computer Vision key and endpoint
         private static string key = "efaaa0a5cce0432daf48120b94f5206f";
         private static string endpoint = "https://eps-processor.cognitiveservices.azure.com";
-
-        private EnergyMeter CallOcr(byte[] image)
+ 
+        public EnergyMeter CallOcr(string imagePath)
         {
             // Create a client
             ComputerVisionClient client = Authenticate(endpoint, key);
 
             // Analyze an image to get features and other properties.
-            var stat = AnalyzeImageUrl(client, "abc");
+            var stat = AnalyzeImageUrl(client, imagePath);
             return stat;
         }
 
@@ -28,9 +28,9 @@ namespace Reader.Azure
             return client;
         }
 
-        private EnergyMeter AnalyzeImageUrl(ComputerVisionClient client, string imageUrl)
+        private EnergyMeter AnalyzeImageUrl(ComputerVisionClient client, string imagePath)
         {
-            using FileStream fs = File.OpenRead(imageUrl);
+            using FileStream fs = File.OpenRead(imagePath);
 
             // Read text from URL
             var textHeaders = client.ReadInStreamAsync(fs).Result;
