@@ -1,4 +1,6 @@
 ﻿using Reader.Azure;
+using System.IO;
+using System.Threading;
 
 
 namespace Reader;
@@ -25,6 +27,7 @@ public partial class MainPage : ContentPage
                     sourceStream.CopyToAsync(localFileStream).Wait();
                 }
 
+                
 
                 var azureVision = new ComputerVisionHandler();
                 var ocrResult = azureVision.CallOcr(localFilePath);
@@ -34,7 +37,7 @@ public partial class MainPage : ContentPage
                     // send message
                     var smsBody = ocrResult.ToString();
                     await Clipboard.Default.SetTextAsync(smsBody);
-                    await DisplayAlert("Siker", smsBody, "Üzenet másolása");
+                    await DisplayAlert("Siker", smsBody, "Üzenet másolása");                   
                 }
                 else
                 {

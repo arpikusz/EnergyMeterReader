@@ -7,12 +7,11 @@
 
     <ScrollView>
         <VerticalStackLayout
-            Spacing="25"
+            Spacing="50"
             Padding="30,0"
-            VerticalOptions="Fill" 
+            VerticalOptions="Center" 
             HorizontalOptions="Fill">
-
-            <Button MinimumHeightRequest="300" MinimumWidthRequest="300" Text="LEOLVASÁS!" Clicked="Button_Clicked" />
+            <Button MinimumHeightRequest="150" MinimumWidthRequest="300" Padding="50" Text="LEOLVASÁS!" Clicked="Button_Clicked" />
         </VerticalStackLayout>
     </ScrollView>
 
